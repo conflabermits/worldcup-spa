@@ -7,10 +7,11 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [sortBy, setSortBy] = useState('group');
-  const [showGroupGames, setShowGroupGames] = useState(true);
+  const [sortBy, setSortBy] = useState('next_game');
+  const [showGroupGames, setShowGroupGames] = useState(false);
+  const [showGroupInfo, setShowGroupInfo] = useState(false);
   const [showKnockoutGames, setShowKnockoutGames] = useState(true);
-  const [showEliminated, setShowEliminated] = useState(true);
+  const [showEliminated, setShowEliminated] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -60,13 +61,19 @@ function App() {
                 <option value="group">Group Default</option>
                 <option value="points">Total Points</option>
                 <option value="wins">Total Wins</option>
+                <option value="goal_difference">Goal Difference</option>
+                <option value="next_game">Next Game (Soonest)</option>
               </select>
             </div>
             <div>
               <label style={{ marginRight: '0.5rem', fontWeight: 600 }}>Show:</label>
               <label style={{ marginRight: '1rem', cursor: 'pointer' }}>
                 <input type="checkbox" checked={showGroupGames} onChange={e => setShowGroupGames(e.target.checked)} style={{ marginRight: '0.2rem' }} />
-                Group Stage
+                Group Stage Games
+              </label>
+              <label style={{ marginRight: '1rem', cursor: 'pointer' }}>
+                <input type="checkbox" checked={showGroupInfo} onChange={e => setShowGroupInfo(e.target.checked)} style={{ marginRight: '0.2rem' }} />
+                Group Stage Info
               </label>
               <label style={{ marginRight: '1rem', cursor: 'pointer' }}>
                 <input type="checkbox" checked={showKnockoutGames} onChange={e => setShowKnockoutGames(e.target.checked)} style={{ marginRight: '0.2rem' }} />
@@ -106,6 +113,7 @@ function App() {
         <WorldCupTable 
           teams={data.teams.filter(t => showEliminated || !t.isEliminated)} 
           showGroupGames={showGroupGames} 
+          showGroupInfo={showGroupInfo}
           showKnockoutGames={showKnockoutGames} 
           sortBy={sortBy} 
         />

@@ -1,7 +1,12 @@
 import React from 'react';
 import TeamRow from './TeamRow';
 
-export default function WorldCupTable({ teams, showGroupGames, showKnockoutGames, sortBy }) {
+export default function WorldCupTable({ teams, showGroupGames, showGroupInfo, showKnockoutGames, sortBy }) {
+  const getNextGameTime = (team) => {
+    const nextGame = team.games.find(g => g.status !== 'post');
+    return nextGame ? new Date(nextGame.date).getTime() : Infinity;
+  };
+
   // Sort teams
   const sortedTeams = [...teams].sort((a, b) => {
     if (sortBy === 'group') {
@@ -10,7 +15,15 @@ export default function WorldCupTable({ teams, showGroupGames, showKnockoutGames
     } else if (sortBy === 'points') {
       return Number(b.stats.pts) - Number(a.stats.pts) || Number(b.stats.gd) - Number(a.stats.gd);
     } else if (sortBy === 'wins') {
-      return Number(b.stats.w) - Number(a.stats.w);
+      return Number(b.stats.w) - Number(a.stats.w) || Number(b.stats.pts) - Number(a.stats.pts);
+    } else if (sortBy === 'goal_difference') {
+      return Number(b.stats.gd) - Number(a.stats.gd) || Number(b.stats.pts) - Number(a.stats.pts);
+    } else if (sortBy === 'next_game') {
+      const timeA = getNextGameTime(a);
+      const timeB = getNextGameTime(b);
+      if (timeA !== timeB) return timeA - timeB;
+      // Fallback if games are at the same time or both have no next games
+      return Number(b.stats.pts) - Number(a.stats.pts) || Number(b.stats.gd) - Number(a.stats.gd);
     }
     return 0;
   });
@@ -34,10 +47,14 @@ export default function WorldCupTable({ teams, showGroupGames, showKnockoutGames
         <thead>
           <tr>
             <th>Team</th>
-            <th className="col-num">GP</th>
+            {showGroupInfo && (
+              <th className="col-num">GP</th>
+            )}
             <th className="col-num">W / D / L</th>
             <th className="col-num">GF / GA (GD)</th>
-            <th className="col-num">Pts</th>
+            {showGroupInfo && (
+              <th className="col-num">Pts</th>
+            )}
             {matchHeaders.map((header, i) => (
               <th key={i} style={{ textAlign: 'center' }}>{header}</th>
             ))}
@@ -48,7 +65,8 @@ export default function WorldCupTable({ teams, showGroupGames, showKnockoutGames
             <TeamRow 
               key={team.id} 
               team={team} 
-              showGroupGames={showGroupGames} 
+              showGroupGames={showGroupGames}
+              showGroupInfo={showGroupInfo} 
               showKnockoutGames={showKnockoutGames} 
             />
           ))}

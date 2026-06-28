@@ -1,7 +1,7 @@
 import React from 'react';
 import MatchCell from './MatchCell';
 
-export default function TeamRow({ team, showGroupGames, showKnockoutGames }) {
+export default function TeamRow({ team, showGroupGames, showGroupInfo, showKnockoutGames }) {
   // Sort games based on user selection
   const getOrderedGames = () => {
     let gamesList = [];
@@ -38,12 +38,18 @@ export default function TeamRow({ team, showGroupGames, showKnockoutGames }) {
             </a>
           </span>
         </div>
-        <span style={{color: 'var(--text-secondary)', fontSize: '0.8rem', marginLeft: '1rem'}}>{team.group}</span>
+        {showGroupInfo && (
+          <span style={{color: 'var(--text-secondary)', fontSize: '0.8rem', marginLeft: '1rem'}}>{team.group}</span>
+        )}
       </td>
-      <td className="col-num">{team.stats.gp}</td>
+      {showGroupInfo && (
+        <td className="col-num">{team.stats.gp}</td>
+      )}
       <td className="col-num">{team.stats.w} / {team.stats.d} / {team.stats.l}</td>
       <td className="col-num">{team.stats.gf} / {team.stats.ga} ({team.stats.gd})</td>
-      <td className="col-num" style={{ fontWeight: 'bold' }}>{team.stats.pts}</td>
+      {showGroupInfo && (
+        <td className="col-num" style={{ fontWeight: 'bold' }}>{team.stats.pts}</td>
+      )}
       
       {orderedGames.map((game, i) => (
         <MatchCell key={game ? game.id : `empty-${i}`} game={game} />
