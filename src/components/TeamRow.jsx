@@ -36,25 +36,26 @@ export default function TeamRow({ team, showGroupGames, showGroupInfo, showKnock
     rowClass += pairIndex === 0 ? ' matchup-first' : ' matchup-second';
   }
 
+  const rowStyle = {
+    '--team-bg': `url(${team.logo})`
+  };
+
   return (
-    <tr 
-      className={rowClass}
-      style={{
-        background: `linear-gradient(90deg, ${teamColor}26 0%, transparent 50%)`
-      }}
-    >
+    <tr className={rowClass} style={rowStyle}>
       <td className="col-team">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          {team.logo && <img src={team.logo} alt={team.abbreviation} className="team-logo" />}
-          <span title={team.abbreviation}>
-            <a href={`https://www.espn.com/soccer/team/_/id/${team.id}`} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
-              {team.name}
-            </a>
-          </span>
+        <div className="col-team-wrapper">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {team.logo && <img src={team.logo} alt={team.abbreviation} className="team-logo" />}
+            <span title={team.abbreviation}>
+              <a href={`https://www.espn.com/soccer/team/_/id/${team.id}`} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                {team.name}
+              </a>
+            </span>
+          </div>
+          {showGroupInfo && (
+            <span style={{color: 'var(--text-secondary)', fontSize: '0.8rem', marginLeft: '1rem'}}>{team.group}</span>
+          )}
         </div>
-        {showGroupInfo && (
-          <span style={{color: 'var(--text-secondary)', fontSize: '0.8rem', marginLeft: '1rem'}}>{team.group}</span>
-        )}
       </td>
       {showGroupInfo && (
         <td className="col-num">{team.stats.gp}</td>

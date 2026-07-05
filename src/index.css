@@ -1,7 +1,9 @@
 :root {
   --bg-color: #121212;
   --surface-color: #1e1e1e;
+  --surface-rgb: 30, 30, 30;
   --surface-hover: #2c2c2c;
+  --surface-hover-rgb: 44, 44, 44;
   --text-primary: #ffffff;
   --text-secondary: #a0a0a0;
   --border-color: #333333;
@@ -58,7 +60,7 @@ th {
 }
 
 tr:hover td {
-  background-color: var(--surface-hover);
+  /* removed to let tr background shine through */
 }
 
 tr:last-child td {
@@ -71,11 +73,14 @@ tr:last-child td {
 }
 
 .col-team {
+  font-weight: 600;
+}
+
+.col-team-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  font-weight: 600;
   min-height: 36px;
 }
 
@@ -151,14 +156,35 @@ select {
   margin-top: 1rem;
 }
 
-/* Matchup Grouping */
+/* Matchup Grouping & Flag Backgrounds */
+.team-row {
+  --current-surface-rgb: var(--surface-rgb);
+  --flag-overlay-opacity: 0.85; /* 15% flag visibility */
+  background: linear-gradient(90deg, rgba(var(--current-surface-rgb), var(--flag-overlay-opacity)) 0%, rgba(var(--current-surface-rgb), 1) 75%), var(--team-bg);
+  background-size: 100% 100%, 125% 500%; /* 125% width crops 50px L/R. 500% height crops 200px T/B */
+  background-position: left center, center center;
+  background-repeat: no-repeat;
+}
+.team-row:hover {
+  --current-surface-rgb: var(--surface-hover-rgb);
+  --flag-overlay-opacity: 0.70; /* 30% flag visibility on hover */
+}
+
+/* Matchup block styling */
 .matchup-first td {
-  border-bottom: none;
+  border-top: 2px solid var(--accent-color) !important;
 }
-.matchup-pair td {
-  background-color: rgba(255, 255, 255, 0.02);
+.matchup-second td {
+  border-bottom: 2px solid var(--accent-color) !important;
 }
-/* Ensure hover works properly over the pair background */
-.team-row:hover td {
-  background-color: var(--surface-hover);
+.matchup-pair td:first-child {
+  border-left: 2px solid var(--accent-color) !important;
+}
+.matchup-pair td:last-child {
+  border-right: 2px solid var(--accent-color) !important;
+}
+
+/* Remove default hover backgrounds on td so the tr background is visible */
+tr:hover td {
+  background-color: transparent;
 }
