@@ -150,3 +150,15 @@ select {
   color: var(--text-secondary);
   margin-top: 1rem;
 }
+
+/* Matchup Grouping */
+.matchup-first td {
+  border-bottom: none;
+}
+.matchup-pair td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+/* Ensure hover works properly over the pair background */
+.team-row:hover td {
+  background-color: var(--surface-hover);
+}

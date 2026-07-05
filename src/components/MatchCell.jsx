@@ -21,6 +21,8 @@ export default function MatchCell({ game }) {
     timeDisplay = gameTime.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + 
                   gameTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
+  
+  const isToday = !isPlayed && !isLive && (gameTime.toDateString() === new Date().toDateString());
 
   return (
     <td className="game-cell">
@@ -39,7 +41,10 @@ export default function MatchCell({ game }) {
               {isPlayed && (
                 <span className="game-result">{score} - {opponentScore}</span>
               )}
-              <span className="game-status" style={{ color: isLive ? 'var(--error-color)' : 'var(--text-secondary)' }}>
+              <span className="game-status" style={{ 
+                color: isLive ? 'var(--error-color)' : (isToday ? 'var(--accent-color)' : 'var(--text-secondary)'),
+                fontWeight: isToday ? 'bold' : 'normal'
+              }}>
                 {timeDisplay}
               </span>
             </a>

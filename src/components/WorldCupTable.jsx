@@ -50,8 +50,12 @@ export default function WorldCupTable({ teams, showGroupGames, showGroupInfo, sh
             {showGroupInfo && (
               <th className="col-num">GP</th>
             )}
-            <th className="col-num">W / D / L</th>
-            <th className="col-num">GF / GA (GD)</th>
+            {showGroupInfo && (
+              <>
+                <th className="col-num">W / D / L</th>
+                <th className="col-num">GF / GA (GD)</th>
+              </>
+            )}
             {showGroupInfo && (
               <th className="col-num">Pts</th>
             )}
@@ -61,15 +65,49 @@ export default function WorldCupTable({ teams, showGroupGames, showGroupInfo, sh
           </tr>
         </thead>
         <tbody>
-          {sortedTeams.map(team => (
-            <TeamRow 
-              key={team.id} 
-              team={team} 
-              showGroupGames={showGroupGames}
-              showGroupInfo={showGroupInfo} 
-              showKnockoutGames={showKnockoutGames} 
-            />
-          ))}
+          {sortedTeams.map((team, index) => {
+            let isMatchupPair = false;
+            let pairIndex = -1;
+
+            if (sortBy === 'next_game') {
+              const nextGameId = getNextGameTime(team) !== Infinity 
+                ? team.games.find(g => g.status !== 'post')?.id 
+                : null;
+              
+              if (nextGameId) {
+                const prevTeam = sortedTeams[index - 1];
+                const nextTeam = sortedTeams[index + 1];
+                
+                const prevNextGameId = prevTeam && getNextGameTime(prevTeam) !== Infinity 
+                  ? prevTeam.games.find(g => g.status !== 'post')?.id 
+                  : null;
+                  
+                const nextNextGameId = nextTeam && getNextGameTime(nextTeam) !== Infinity 
+                  ? nextTeam.games.find(g => g.status !== 'post')?.id 
+                  : null;
+
+                if (prevNextGameId === nextGameId) {
+                  isMatchupPair = true;
+                  pairIndex = 1; // Second in pair
+                } else if (nextNextGameId === nextGameId) {
+                  isMatchupPair = true;
+                  pairIndex = 0; // First in pair
+                }
+              }
+            }
+
+            return (
+              <TeamRow 
+                key={team.id} 
+                team={team} 
+                showGroupGames={showGroupGames}
+                showGroupInfo={showGroupInfo} 
+                showKnockoutGames={showKnockoutGames} 
+                isMatchupPair={isMatchupPair}
+                pairIndex={pairIndex}
+              />
+            );
+          })}
         </tbody>
       </table>
     </div>

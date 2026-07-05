@@ -1,7 +1,8 @@
 import React from 'react';
 import MatchCell from './MatchCell';
+import { getTeamColor } from '../api/teamColors';
 
-export default function TeamRow({ team, showGroupGames, showGroupInfo, showKnockoutGames }) {
+export default function TeamRow({ team, showGroupGames, showGroupInfo, showKnockoutGames, isMatchupPair, pairIndex }) {
   // Sort games based on user selection
   const getOrderedGames = () => {
     let gamesList = [];
@@ -26,9 +27,22 @@ export default function TeamRow({ team, showGroupGames, showGroupInfo, showKnock
   };
 
   const orderedGames = getOrderedGames();
+  const teamColor = getTeamColor(team.abbreviation);
+
+  // Matchup block styling
+  let rowClass = 'team-row';
+  if (isMatchupPair) {
+    rowClass += ' matchup-pair';
+    rowClass += pairIndex === 0 ? ' matchup-first' : ' matchup-second';
+  }
 
   return (
-    <tr>
+    <tr 
+      className={rowClass}
+      style={{
+        background: `linear-gradient(90deg, ${teamColor}26 0%, transparent 50%)`
+      }}
+    >
       <td className="col-team">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           {team.logo && <img src={team.logo} alt={team.abbreviation} className="team-logo" />}
@@ -45,8 +59,12 @@ export default function TeamRow({ team, showGroupGames, showGroupInfo, showKnock
       {showGroupInfo && (
         <td className="col-num">{team.stats.gp}</td>
       )}
-      <td className="col-num">{team.stats.w} / {team.stats.d} / {team.stats.l}</td>
-      <td className="col-num">{team.stats.gf} / {team.stats.ga} ({team.stats.gd})</td>
+      {showGroupInfo && (
+        <>
+          <td className="col-num">{team.stats.w} / {team.stats.d} / {team.stats.l}</td>
+          <td className="col-num">{team.stats.gf} / {team.stats.ga} ({team.stats.gd})</td>
+        </>
+      )}
       {showGroupInfo && (
         <td className="col-num" style={{ fontWeight: 'bold' }}>{team.stats.pts}</td>
       )}

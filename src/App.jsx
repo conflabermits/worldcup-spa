@@ -118,6 +118,10 @@ function App() {
           sortBy={sortBy} 
         />
       )}
+
+      <footer style={{ marginTop: '3rem', textAlign: 'center', padding: '1.5rem', borderTop: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        View source code for this page at <a href="https://github.com/conflabermits/worldcup-spa" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-color)', textDecoration: 'none' }}>https://github.com/conflabermits/worldcup-spa</a>
+      </footer>
     </div>
   );
 }
